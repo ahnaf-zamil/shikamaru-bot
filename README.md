@@ -1,3 +1,5 @@
+![Shikamaru is handsome](https://cdn.discordapp.com/avatars/759338827432722472/e5d0d195b45e4c057dfedda875d8eed2.png?size=1024)
+
 # Shikamaru
 Shikamaru is an open-source Discord bot filled with numerous features. It's written in Python and uses Hikari, a lightweight bot framework for Python.
 
