@@ -10,3 +10,6 @@ class Events(lightbulb.Plugin):
     @lightbulb.listener(hikari.ShardReadyEvent)
     async def on_ready(self, event):
         print("\n\nI'm is ready for work! What a drag.......\n\n")
+
+def load(bot):
+    bot.add_plugin(Events(bot))
