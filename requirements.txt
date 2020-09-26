@@ -1,0 +1,5 @@
+hikari-lightbulb
+hikari
+asyncio
+aiohttp
+logging
