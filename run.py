@@ -1,5 +1,6 @@
 import os
 import inspect
+import hikari
 import importlib
 import shikamaru
 from shikamaru import bot
@@ -14,4 +15,7 @@ for i in os.listdir('./shikamaru/plugins'):
         plugin.load(bot)
 
 # Running bot
-bot.run()
+bot.run(activity=hikari.Activity(
+    name="sh!help",
+    type=hikari.ActivityType.WATCHING
+))

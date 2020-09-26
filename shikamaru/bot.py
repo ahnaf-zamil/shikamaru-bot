@@ -1,6 +1,7 @@
 import lightbulb
 import hikari
 import logging
+import asyncio
 from configparser import ConfigParser
 
 # Using configparser to use config.ini file
