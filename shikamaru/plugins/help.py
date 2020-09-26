@@ -2,6 +2,8 @@ import lightbulb
 from lightbulb import help
 
 class CustomHelp(help.HelpCommand):
+    # Using lightbulb's auto-generated help command
+    # Just need to override the methods
 
     async def object_not_found(self, context, name):
         pass
@@ -19,6 +21,7 @@ class CustomHelp(help.HelpCommand):
         pass
 
 class Help(lightbulb.Plugin):
+    # Help command plugin
 
     def __init__(self, bot):
         super().__init__()
