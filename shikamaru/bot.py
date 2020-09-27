@@ -13,3 +13,8 @@ botconfig = config_object["BOTCONFIG"]
 logging.getLogger("lightbulb").setLevel(logging.DEBUG)
 
 bot = lightbulb.Bot(token=botconfig['token'], prefix=botconfig['prefix'], insensitive_commands=bool(botconfig['insensitive']), owner_ids=botconfig['owners'].split(","))
+
+
+@bot.command()
+async def wrong(ctx):
+    await ctx.reply(1/0)

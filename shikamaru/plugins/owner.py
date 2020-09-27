@@ -19,67 +19,62 @@ class Owner(lightbulb.Plugin):
 
 	@lightbulb.command()
 	async def code(self, ctx) -> None:
-	    if str(ctx.message.author.id) in self.bot.owner_ids:
-	        code = ctx.message.content[len(command) + 1:]
-
-	        if code.startswith('```') and code.endswith('```'):
-	            code = '\n'.join(code.split('\n')[1:-1])
-	        else:
-	            code = code.strip('` \n')
-
-	        env = {
-	            "bot": self.bot,
-	            "client": self.bot,
-	            "msg": ctx.message,
-	            "message": ctx.message,
-	            "server_id": ctx.message.guild_id,
-	            "guild_id": ctx.message.guild_id,
-	            "channel_id": ctx.message.channel_id,
-	            "author": ctx.message.author,
-	            "eprint": self.eprint,
-	            "ctx": ctx
-	        }
-	        env.update(globals())
-	        stdout = io.StringIO()
-
-	        new_forced_async_code = f"async def code():\n{textwrap.indent(code, '    ')}"
-
-	        try:
-	            exec(new_forced_async_code, env) # shut up pylint with "[exec-used] Use of exec [W0122]"
-	        except Exception as error: # shut up pylint with "[broad-except] Catching too general exception Exception [W0703]"
-	            embed = hikari.Embed(
-	                title="Failed to execute.",
-	                description=f"{error} ```py\n{traceback.format_exc()}\n```\n```py\n{error.__class__.__name__}\n```",
-	                colour=(255, 10, 40)
-	            )
-	            await ctx.reply(embed=embed)
-	            await ctx.message.add_reaction("❌")
-	            return
-
-	        code = env["code"]
-
-	        try:
-	            with redirect_stdout(stdout):
-	                result = await code()
-	        except Exception as error: # shut up pylint with "[broad-except] Catching too general exception Exception [W0703]"
-	            value = stdout.getvalue()
-	            embed = hikari.Embed(
-	                title="Failed to execute.",
-	                description=f"{error} ```py\n{traceback.format_exc()}\n```\n```py\n{value}\n```",
-	                colour=(255, 10, 40)
-	            )
-	            await ctx.reply(embed=embed)
-	            await ctx.message.add_reaction("❌")
-	            return
-
-	        value = stdout.getvalue()
-	        embed = hikari.Embed(
-	            title="Success!",
-	            description=f"Returned value: ```py\n{result}\n```\nStandard Output: ```py\n{value}\n```",
-	            colour=(5, 255, 70)
-	        )
-	        await ctx.reply(embed=embed)
-	        await ctx.message.add_reaction("✅")
+		if str(ctx.message.author.id) in self.bot.owner_ids:
+			channel = self.bot.cache.get_guild_channel(ctx.message.channel_id)
+			code = ctx.message.content[len(command) + 1:]
+			await self.bot.rest.trigger_typing(channel)
+			if code.startswith('```') and code.endswith('```'):
+			    code = '\n'.join(code.split('\n')[1:-1])
+			else:
+				code = code.strip('` \n')
+			env = {
+				"bot": self.bot,
+				"client": self.bot,
+				"msg": ctx.message,
+				"message": ctx.message,
+				"server_id": ctx.message.guild_id,
+				"guild_id": ctx.message.guild_id,
+				"channel_id": ctx.message.channel_id,
+				"author": ctx.message.author,
+				"eprint": self.eprint,
+				"ctx": ctx
+			}
+			env.update(globals())
+			stdout = io.StringIO()
+			new_forced_async_code = f"async def code():\n{textwrap.indent(code, '    ')}"
+			try:
+				exec(new_forced_async_code, env)
+			except Exception as error:
+				embed = hikari.Embed(
+					title="Failed to execute.",
+					description=f"{error} ```py\n{traceback.format_exc()}\n```\n```py\n{error.__class__.__name__}\n```",
+					colour=(255, 10, 40)
+				)
+				await ctx.reply(embed=embed)
+				await ctx.message.add_reaction("❌")
+				return
+			code = env["code"]
+			try:
+				with redirect_stdout(stdout):
+					result = await code()
+			except Exception as error:
+				value = stdout.getvalue()
+				embed = hikari.Embed(
+					title="Failed to execute.",
+					description=f"{error} ```py\n{traceback.format_exc()}\n```",
+					colour=(255, 10, 40)
+				)
+				await ctx.reply(embed=embed)
+				await ctx.message.add_reaction("❌")
+				return
+			value = stdout.getvalue()
+			em = hikari.Embed(
+				title="Output",
+				description=f"```py\n{result}\n```",
+				color=(40, 255, 10)
+			)
+			await ctx.reply(embed=em)
+			await ctx.message.add_reaction("✅")
 
 def load(bot):
 	bot.add_plugin(Owner(bot))
