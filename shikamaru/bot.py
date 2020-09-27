@@ -13,4 +13,3 @@ botconfig = config_object["BOTCONFIG"]
 logging.getLogger("lightbulb").setLevel(logging.DEBUG)
 
 bot = lightbulb.Bot(token=botconfig['token'], prefix=botconfig['prefix'], insensitive_commands=bool(botconfig['insensitive']), owner_ids=botconfig['owners'].split(","))
-print(bot.owner_ids)

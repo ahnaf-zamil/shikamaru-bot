@@ -1,6 +1,8 @@
 import hikari
 import lightbulb
 import asyncio
+from ..utils import db
+from lightbulb.events import CommandCompletionEvent
 
 class Events(lightbulb.Plugin):
 
@@ -22,6 +24,11 @@ class Events(lightbulb.Plugin):
             await event.channel.send("What a drag.....") # Sending message when pinged or mentioned.
             return
         
+    @lightbulb.listener(CommandCompletionEvent)
+    async def on_command_complete(self, event):
+        # Incrementing the number of commands ran
+        db.increment()
+
 
 def load(bot):
     bot.add_plugin(Events(bot))

@@ -3,3 +3,4 @@ hikari
 asyncio
 aiohttp
 logging
+sqlalchemy
