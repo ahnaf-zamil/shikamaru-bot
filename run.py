@@ -14,8 +14,9 @@ for i in os.listdir('./shikamaru/plugins'):
         plugin = importlib.import_module(f"shikamaru.plugins.{i[:-3]}")
         plugin.load(bot)
 
+
 # Running bot
 bot.run(activity=hikari.Activity(
-    name="sh!help",
+    name=f"sh!help",
     type=hikari.ActivityType.WATCHING
 ))

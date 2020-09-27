@@ -5,19 +5,19 @@ class CustomHelp(help.HelpCommand):
     # Using lightbulb's auto-generated help command
     # Just need to override the methods
 
-    async def object_not_found(self, context, name):
+    async def object_not_found(self, ctx, name):
         pass
 
-    async def send_help_overview(self, context):
-        print("Unfinished help command")
+    async def send_help_overview(self, ctx):
+        await ctx.reply("Unfinished help command")
 
-    async def send_plugin_help(self, context, plugin):
+    async def send_plugin_help(self, ctx, plugin):
         pass
 
-    async def send_command_help(self, context, command):
+    async def send_command_help(self, ctx, command):
         pass
 
-    async def send_group_help(self, context, group):
+    async def send_group_help(self, ctx, group):
         pass
 
 class Help(lightbulb.Plugin):
