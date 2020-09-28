@@ -38,7 +38,7 @@ class Events(lightbulb.Plugin):
         now = datetime.now()
         tinfo = traceback.format_exception(type(event.exception), event.exception,  tb=event.traceback)
         print(''.join(tinfo))
-        error = f"{now.strftime('%Y-%m-%d %H:%M:%S')} [Command Error] User: '{event.message.author}', Message: '{event.message.content[:30]}', Error: '{event.exception}', Traceback: " + ''.join(tinfo).replace('\n', ' ')
+        error = f"{now.strftime('%Y-%m-%d %H:%M:%S')} [Command Error] User: \"{event.message.author}\", Message: \"{event.message.content[:30]}\", Error: \"{event.exception}\", Traceback: \"" + ''.join(tinfo).replace('\n', '') + "\""
         async with aiofiles.open("bot.log", "a+") as f:
             await f.write(f"{error}\n")
 

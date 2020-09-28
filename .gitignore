@@ -3,9 +3,6 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-# Databases
-*.db
-
 # C extensions
 *.so
 
@@ -45,3 +42,5 @@ docs/_build/
 database.db
 config.ini
 bot.log
+
+spammer.py

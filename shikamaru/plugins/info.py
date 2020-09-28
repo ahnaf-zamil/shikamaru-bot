@@ -84,16 +84,20 @@ SQLite3 Version: {sqlite3.version}
         embed.add_field(name='Commands Ran', value=db.session.query(db.BotData).first().command_ran, inline=True)
         embed.add_field(name='Uptime', value=uptime_stamp)
         embed.add_field(name="Libraries", value=t)
-        embed.set_footer(text=f'Made with Hikari v{version}', icon='http://i.imgur.com/5BFecvA.png')
+        embed.set_footer(text=str(self.bot.me), icon=self.bot.me.avatar_url)
         embed.timestamp = datetime.datetime.now().astimezone()
         await ctx.reply(embed=embed)
 
     @lightbulb.command()
     async def github(self, ctx):
+        '''
+        Gives link to Shikamaru's GitHub repository
+        '''
         em = hikari.Embed(title="Shikamaru's GitHub", color="#4dffa6")
         em.description = "[Click here](https://github.com/ahnaf-zamil/shikamaru-bot) to go to Shikamaru's GitHub page"
         em.set_footer(text=str(self.bot.me), icon=self.bot.me.avatar_url)
         em.timestamp = datetime.datetime.now().astimezone()
+        em.set_footer(text=str(self.bot.me), icon=self.bot.me.avatar_url)
         await ctx.reply(embed=em)
 
 def load(bot):

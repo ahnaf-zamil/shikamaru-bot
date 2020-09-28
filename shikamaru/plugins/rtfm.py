@@ -6,7 +6,7 @@ import io
 import os
 import aiohttp
 from ..utils import fuzzy
-from datetime import datetime
+import datetime
 
 
 class SphinxObjectFileReader:
@@ -125,7 +125,6 @@ class RTFM(lightbulb.Plugin):
         if not site in self.docs_links:
             await ctx.reply("RTFM not available for " + str(site) + ".")
             return
-        print(self.docs_links[site])
         page_types = {
             'latest': self.docs_links[site],
         }
@@ -149,7 +148,7 @@ class RTFM(lightbulb.Plugin):
                           title=f"Reading the docs are a drag...")
         if len(matches) == 0:
             return await ctx.reply('Could not find anything. Sorry.')
-        e.timestamp = datetime.utcnow()
+        e.timestamp = datetime.datetime.now().astimezone()
         e.description = '\n'.join(f'[`{key}`]({url})' for key, url in matches)
         await ctx.reply(embed=e)
 

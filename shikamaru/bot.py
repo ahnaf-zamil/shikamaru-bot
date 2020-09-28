@@ -12,9 +12,5 @@ botconfig = config_object["BOTCONFIG"]
 # Setting up logging
 logging.getLogger("lightbulb").setLevel(logging.DEBUG)
 
-bot = lightbulb.Bot(token=botconfig['token'], prefix=botconfig['prefix'], insensitive_commands=bool(botconfig['insensitive']), owner_ids=botconfig['owners'].split(","))
-
-
-@bot.command()
-async def wrong(ctx):
-    await ctx.reply(1/0)
+# Instantiating bot
+bot = lightbulb.Bot(token=botconfig['token'], prefix=botconfig['prefix'], insensitive_commands=bool(botconfig['insensitive']), owner_ids=[int(i) for i in botconfig['owners'].split(",")])
