@@ -125,6 +125,7 @@ class RTFM(lightbulb.Plugin):
         if not site in self.docs_links:
             await ctx.reply("RTFM not available for " + str(site) + ".")
             return
+
         page_types = {
             'latest': self.docs_links[site],
         }

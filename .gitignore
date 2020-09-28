@@ -41,5 +41,6 @@ docs/_build/
 
 database.db
 bot.log
+config.ini
 
 spammer.py

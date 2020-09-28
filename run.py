@@ -15,6 +15,7 @@ for i in os.listdir('./shikamaru/plugins'):
         plugin.load(bot)
 
 
+
 # Running bot
 bot.run(activity=hikari.Activity(
     name=f"sh!help",
