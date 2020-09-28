@@ -17,7 +17,7 @@ class CustomHelp(help.HelpCommand):
     async def send_help_overview(self, ctx):
         em = hikari.Embed(title="Shikamaru Help", description="Shikamaru is an open-source Discord bot filled with numerous features.\n Type sh!help <command name> to get info about a specific command.")
         em.set_thumbnail(image=self.bot.me.avatar_url)
-        for i in self.bot.commands:
+        #for i in self.bot.commands:
 
         await ctx.reply("Unfinished help command")
 

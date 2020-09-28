@@ -3,4 +3,5 @@ hikari-lightbulb
 hikari==2.0.0.dev83
 asyncio
 aiohttp
+aiofiles
 sqlalchemy
