@@ -9,34 +9,49 @@ class CustomHelp(help.HelpCommand):
 
     def __init__(self, bot):
         self.bot = bot
-        self.type_name_map = {'int': 'number', 'str': 'text', 'float': 'decimal'}
 
     async def object_not_found(self, ctx, name):
-        pass
+        await ctx.reply(f"Command/Category not found for **{name}**.")
 
     async def send_help_overview(self, ctx):
-        em = hikari.Embed(title="Shikamaru Help", description="Shikamaru is an open-source Discord bot filled with numerous features.\n Type sh!help <command name> to get info about a specific command.")
-        em.set_thumbnail(image=self.bot.me.avatar_url)
-        #for i in self.bot.commands:
-
-        await ctx.reply("Unfinished help command")
+        em = hikari.Embed(title="Help", color="#32a89d", description="Shikamaru is an open-source Discord bot filled with numerous features.\n Type `sh!help <command name>` to get info about a specific command.")
+        em.set_thumbnail(self.bot.me.avatar_url)
+        for plugin in self.bot.plugins:
+            if plugin in ["SuperUser", "Events", "Help"]:
+                continue
+            commands = ""
+            for i in list(self.bot.get_plugin(plugin).commands):
+                commands += f"`{i.replace(' ', '')}`, "
+            em.add_field(name=str(plugin), value=commands[:-2])
+        em.set_footer(text=f"Requested by: {ctx.message.author}", icon=ctx.message.author.avatar_url)
+        em.timestamp = datetime.datetime.now().astimezone()
+        await ctx.reply(embed=em)
 
     async def send_plugin_help(self, ctx, plugin):
-        pass
+
+        if plugin.name in ["SuperUser", "Events", "Help"]:
+            await self.object_not_found(ctx, plugin.name)
+            return
+        commands = ""
+        for i in list(plugin.commands):
+            commands += f"`{i.replace(' ', '')}`, "
+        em = hikari.Embed(title=f"Help for: {plugin.name}", color="#ffc400", description=commands[:-2])
+        em.set_footer(text=f"Requested by: {ctx.message.author}", icon=ctx.message.author.avatar_url)
+        em.timestamp = datetime.datetime.now().astimezone()
+        await ctx.reply(embed=em)
 
     async def send_command_help(self, ctx, command):
 
         em = hikari.Embed(title=f"Help for: {command.name.capitalize()}", color="#ae00ff" )
         # ({self.type_name_map[command.arg_details.args[i].annotation.__name__]})
         command_name = ctx.prefix + command.name
-        arg_list = [i for i in command.arg_details.args if i not in ['self', 'ctx']]
-        em.description = f"**Name:** {command.name}\n**Description:**{help.get_help_text(command)}\n**Usage:** `{command_name} {' '.join(arg_list)}`"
+        arg_list = [f"<{i}>" for i in command.arg_details.args if i not in ['self', 'ctx']]
+        usage = f"`{command_name} {' '.join(arg_list)}`"
+        em.description = f"**Name:** {command.name}\n**Description: **{help.get_help_text(command)}\n**Category:** {command.plugin.name}\n**Usage:** {usage}"
         em.set_footer(text=f"Requested by: {ctx.message.author}", icon=ctx.message.author.avatar_url)
         em.timestamp = datetime.datetime.now().astimezone()
         await ctx.reply(embed=em)
 
-    async def send_group_help(self, ctx, group):
-        pass
 
 class Help(lightbulb.Plugin):
     # Help command plugin
