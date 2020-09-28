@@ -21,6 +21,8 @@ Now go to the folder and run
 pip install -r requirements.txt
 ```
 
+You would have to create a `config.ini` file and then fill it according to the `config.example.ini` file
+
 Then run the bot using
 ```bash
 python run.py
