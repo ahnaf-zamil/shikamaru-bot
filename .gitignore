@@ -40,7 +40,6 @@ coverage.xml
 docs/_build/
 
 database.db
-config.ini
 bot.log
 
 spammer.py

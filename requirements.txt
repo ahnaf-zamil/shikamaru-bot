@@ -4,3 +4,4 @@ asyncio
 aiohttp
 logging
 sqlalchemy
+discord.py
