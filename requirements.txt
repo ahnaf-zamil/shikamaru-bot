@@ -3,5 +3,4 @@ hikari-lightbulb
 hikari
 asyncio
 aiohttp
-logging
 sqlalchemy
