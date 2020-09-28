@@ -1,7 +1,7 @@
+discord.py
 hikari-lightbulb
 hikari
 asyncio
 aiohttp
 logging
 sqlalchemy
-discord.py
