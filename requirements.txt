@@ -1,6 +1,6 @@
 discord.py
 hikari-lightbulb
-hikari
+hikari==2.0.0.dev83
 asyncio
 aiohttp
 sqlalchemy
