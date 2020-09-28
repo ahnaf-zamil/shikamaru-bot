@@ -41,3 +41,7 @@ coverage.xml
 
 # Sphinx documentation
 docs/_build/
+
+database.db
+config.ini
+bot.log
