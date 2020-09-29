@@ -14,10 +14,10 @@ class CustomHelp(help.HelpCommand):
         await ctx.reply(f"Command/Category not found for **{name}**.")
 
     async def send_help_overview(self, ctx):
-        em = hikari.Embed(title="Help", color="#32a89d", description="Shikamaru is an open-source Discord bot filled with numerous features.\n Type `sh!help <command name>` to get info about a specific command.")
+        em = hikari.Embed(title="Help", color="#32a89d", description=f"{self.bot.me.username} is an open-source Discord bot filled with numerous features.\n Type `{self.bot.prefix}help <command name>` to get info about a specific command.")
         em.set_thumbnail(self.bot.me.avatar_url)
         for plugin in self.bot.plugins:
-            if plugin in ["SuperUser", "Events", "Help"]:
+            if plugin in self.bot.hidden_plugins:
                 continue
             commands = ""
             for i in list(self.bot.get_plugin(plugin).commands):
@@ -29,7 +29,7 @@ class CustomHelp(help.HelpCommand):
 
     async def send_plugin_help(self, ctx, plugin):
 
-        if plugin.name in ["SuperUser", "Events", "Help"]:
+        if plugin.name in self.bot.hidden_plugins:
             await self.object_not_found(ctx, plugin.name)
             return
         commands = ""
@@ -43,7 +43,6 @@ class CustomHelp(help.HelpCommand):
     async def send_command_help(self, ctx, command):
 
         em = hikari.Embed(title=f"Help for: {command.name.capitalize()}", color="#ae00ff" )
-        # ({self.type_name_map[command.arg_details.args[i].annotation.__name__]})
         command_name = ctx.prefix + command.name
         arg_list = [f"<{i}>" for i in command.arg_details.args if i not in ['self', 'ctx']]
         usage = f"`{command_name} {' '.join(arg_list)}`"

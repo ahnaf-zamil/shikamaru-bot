@@ -16,7 +16,7 @@ class Events(lightbulb.Plugin):
     @lightbulb.listener(hikari.ShardReadyEvent)
     async def on_ready(self, event):
         await self.bot.update_presence(activity=hikari.Activity(
-            name=f"sh!help in {len([server async for server in self.bot.rest.fetch_my_guilds()])} servers | What a drag....",
+            name=f"{self.bot.prefix}help in {len([server async for server in self.bot.rest.fetch_my_guilds()])} servers | What a drag....",
             type=hikari.ActivityType.WATCHING
         ))
         print("\n\n I'm ready for work! What a drag.....\n\n")

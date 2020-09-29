@@ -7,6 +7,8 @@ from shikamaru import bot
 
 print(f"\n\n\nShikamaru v{shikamaru.__version__} by", shikamaru.__author__, "\n\n\n")
 
+bot.hidden_plugins = ["SuperUser", "Events", "Help"]
+
 # Loading plugins
 # If you are familiar with Discord.py, plugins are similar to cogs
 for i in os.listdir('./shikamaru/plugins'):
@@ -18,6 +20,6 @@ for i in os.listdir('./shikamaru/plugins'):
 
 # Running bot
 bot.run(activity=hikari.Activity(
-    name=f"sh!help",
+    name=f"{bot.prefix}help",
     type=hikari.ActivityType.WATCHING
 ))

@@ -22,7 +22,7 @@ class Info(lightbulb.Plugin):
 
     @lightbulb.command()
     async def ping(self, ctx):
-
+        """Shows you the bot's latency to the Discord API"""
         start = time.monotonic()
         msg = await ctx.reply("Pinging...")
         millis = (time.monotonic() - start) * 1000
@@ -38,7 +38,7 @@ class Info(lightbulb.Plugin):
 
     @lightbulb.command()
     async def about(self, ctx):
-        """Tells you information about the bot itself."""
+        """Tells you about the bot itself."""
         now = datetime.datetime.utcnow()  # Timestamp of when uptime function is run
         delta = now - start_time
         hours, remainder = divmod(int(delta.total_seconds()), 3600)

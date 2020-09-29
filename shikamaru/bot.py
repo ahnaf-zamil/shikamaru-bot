@@ -13,4 +13,6 @@ botconfig = config_object["BOTCONFIG"]
 logging.getLogger("lightbulb").setLevel(logging.DEBUG)
 
 # Instantiating bot
-bot = lightbulb.Bot(token=botconfig['token'], prefix=botconfig['prefix'], insensitive_commands=bool(botconfig['insensitive']), owner_ids=[int(i) for i in botconfig['owners'].split(",")])
+bot = lightbulb.Bot(token=botconfig['token'], prefix=botconfig['prefix'], insensitive_commands=bool(botconfig['insensitive']), owner_ids=[int(i) for i in botconfig['owners'].split(", ")])
+bot.prefix = botconfig['prefix']
+bot.config = botconfig
