@@ -39,8 +39,6 @@ coverage.xml
 # Sphinx documentation
 docs/_build/
 
-database.db
-bot.log
-config.ini
+
 
 spammer.py
