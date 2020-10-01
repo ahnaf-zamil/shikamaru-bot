@@ -26,6 +26,9 @@ cat_titles = [
 ]
 
 class Fun(lightbulb.Plugin):
+	"""The plugin for all fun commands"""
+
+
 	def __init__(self, bot):
 		super().__init__()
 		self.bot = bot

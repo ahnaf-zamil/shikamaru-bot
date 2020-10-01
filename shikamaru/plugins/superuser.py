@@ -26,29 +26,29 @@ class SuperUser(lightbulb.Plugin):
         print(*args, file=sys.stderr, **kwargs)
 
     @checks.owner_only()
-    @lightbulb.command(aliases=['exec', 'eval'])
+    @lightbulb.command(aliases=["exec", "eval"])
     async def code(self, ctx) -> None:
         start = time.monotonic()
         command = ctx.message.content[:7]
         channel = self.bot.cache.get_guild_channel(ctx.message.channel_id)
-        code = ctx.message.content[len(command) + 1:]
+        code = ctx.message.content[len(command) + 1 :]
         await self.bot.rest.trigger_typing(channel)
-        if code.startswith('```') and code.endswith('```'):
-            code = '\n'.join(code.split('\n')[1:-1])
+        if code.startswith("```") and code.endswith("```"):
+            code = "\n".join(code.split("\n")[1:-1])
         else:
-            code = code.strip('` \n')
+            code = code.strip("` \n")
         env = {
-				"bot": self.bot,
-				"client": self.bot,
-				"msg": ctx.message,
-				"message": ctx.message,
-				"server_id": ctx.message.guild_id,
-				"guild_id": ctx.message.guild_id,
-				"channel_id": ctx.message.channel_id,
-				"author": ctx.message.author,
-				"eprint": self.eprint,
-				"ctx": ctx
-		}
+            "bot": self.bot,
+            "client": self.bot,
+            "msg": ctx.message,
+            "message": ctx.message,
+            "server_id": ctx.message.guild_id,
+            "guild_id": ctx.message.guild_id,
+            "channel_id": ctx.message.channel_id,
+            "author": ctx.message.author,
+            "eprint": self.eprint,
+            "ctx": ctx,
+        }
         env.update(globals())
         stdout = io.StringIO()
 
@@ -57,10 +57,10 @@ class SuperUser(lightbulb.Plugin):
             exec(new_forced_async_code, env)
         except Exception as error:
             embed = hikari.Embed(
-				title="Failed to execute.",
-				description=f"{error} ```py\n{traceback.format_exc()}\n```\n```py\n{error.__class__.__name__}\n```",
-				colour=(255, 10, 40)
-			)
+                title="Failed to execute.",
+                description=f"{error} ```py\n{traceback.format_exc()}\n```\n```py\n{error.__class__.__name__}\n```",
+                colour=(255, 10, 40),
+            )
             await ctx.reply(embed=embed)
             await ctx.message.add_reaction("❌")
             return
@@ -71,23 +71,22 @@ class SuperUser(lightbulb.Plugin):
         except Exception as error:
             value = stdout.getvalue()
             embed = hikari.Embed(
-				title="Failed to execute.",
-				description=f"{error} ```py\n{traceback.format_exc()}\n```",
-				colour=(255, 10, 40)
-			)
+                title="Failed to execute.",
+                description=f"{error} ```py\n{traceback.format_exc()}\n```",
+                colour=(255, 10, 40),
+            )
             await ctx.reply(embed=embed)
             await ctx.message.add_reaction("❌")
             return
         value = stdout.getvalue()
         millis = (time.monotonic() - start) * 1000
         em = hikari.Embed(
-			title=f"Executed in {int(millis):,.2f}ms",
-			description=f"\n\nStdout:\n```py\n# Python {platform.python_version()} - Hikari {hikari.__version__} - lightbulb {lightbulb.__version__} \n\n{value if value != '' else None}```\nReturned:\n```py\n{result}\n```",
-			color=(40, 255, 10)
-		)
+            title=f"Executed in {int(millis):,.2f}ms",
+            description=f"\n\nStdout:\n```py\n# Python {platform.python_version()} - Hikari {hikari.__version__} - lightbulb {lightbulb.__version__} \n\n{value if value != '' else None}```\nReturned:\n```py\n{result}\n```",
+            color=(40, 255, 10),
+        )
         await ctx.message.add_reaction("✅")
         await ctx.reply(embed=em)
-
 
     @checks.owner_only()
     @commands.command(aliases=["rst"])
@@ -114,7 +113,7 @@ class SuperUser(lightbulb.Plugin):
                 timestamp=datetime.now(tz=timezone.utc),
             ).set_footer(
                 text=f"{index}/{len(paginator)}",
-                icon=context.author.avatar_url,
+                icon=ctx.author.avatar_url,
             )
 
         paginator.add_line(body.replace("`", "ˋ"))

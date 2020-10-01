@@ -2,5 +2,4 @@ hikari-lightbulb
 asyncio
 aiohttp
 aiofiles
-sqlalchemy
 psutil

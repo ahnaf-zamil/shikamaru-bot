@@ -3,8 +3,8 @@ import hikari
 import datetime
 import psutil
 import time
+import aiofiles
 import sqlite3
-from ..utils import db
 import itertools
 import datetime
 from platform import python_version
@@ -56,7 +56,6 @@ class Info(lightbulb.Plugin):
         embed.title = 'About Shikamaru'
         embed.colour = "#326fa8"
         embed.url = "https://github.com/ahnaf-zamil/shikamaru-bot"
-
         owner = await self.bot.rest.fetch_user(int(self.bot.owner_ids[0]))
         embed.set_thumbnail(self.bot.me.avatar_url)
         embed.add_field(name="Owner", value=f":point_right: {owner} :point_left:")
@@ -82,7 +81,6 @@ SQLite3 Version: {sqlite3.version}
         cpu_usage = self.process.cpu_percent() / psutil.cpu_count()
         embed.add_field(name='Process', value=f'```Memory: {memory_usage:.2f} MiB\nCPU: {cpu_usage:.2f}%```', inline=True)
         version = hikari.__version__
-        embed.add_field(name='Commands Ran', value=db.session.query(db.BotData).first().command_ran, inline=True)
         embed.add_field(name='Uptime', value=uptime_stamp)
         embed.add_field(name="Libraries", value=t)
         embed.set_footer(text=str(self.bot.me), icon=self.bot.me.avatar_url)
