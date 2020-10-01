@@ -4,3 +4,4 @@ asyncio
 aiohttp
 aiofiles
 psutil
+googletrans
