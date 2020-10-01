@@ -1,8 +1,8 @@
 ![Shikamaru is handsome](https://cdn.discordapp.com/avatars/759338827432722472/e5d0d195b45e4c057dfedda875d8eed2.png?size=1024)
 
 # Shikamaru
-Shikamaru is an open-source Discord bot filled with numerous features. It's written in Python and uses Hikari, a lightweight bot framework for Python.
 
+Shikamaru is an open-source Discord bot filled with numerous features. It's written in Python and uses Hikari, a lightweight bot framework for Python.
 
 ## Running the bot
 
@@ -16,17 +16,20 @@ git clone https://github.com/ahnaf-zamil/shikamaru-bot.git
 ```
 
 Now go to the folder and run
+
 ```py
 
 pip install -r requirements.txt
 ```
 
-You would have to create a `config.ini` file and then fill it according to the `config.example.ini` file
+You would have to create a `config.ini` file and then fill it according to the `config.example.ini` file. Also make a new environment variable called `TOKEN` and put your bot's token there.
 
 Then run the bot using
+
 ```bash
 python run.py
 ```
 
 ## Contributing
+
 Shikamaru is a new Discord bot and it requires a lot of development so your contribution is welcome. If you want to add any plugins/cogs to the bot, just email me or make an issue on the repository [here](https://github.com/ahnaf-zamil/shikamaru-bot/issues).
