@@ -154,6 +154,18 @@ class Fun(lightbulb.Plugin):
         await ctx.reply("Ask a question to 8ball.")
 
     @lightbulb.command()
+    async def roast(self, ctx, *, user=None):
+        if user:
+            with open("shikamaru/txt/roasts.txt") as f:
+                roasts = f.readlines()
+
+            await ctx.reply(f"**{user}**, {random.choice(roasts)}")
+        else:
+            await ctx.reply(
+                f"Mention the person you want to roast, {ctx.message.author.mention}"
+            )
+
+    @lightbulb.command()
     async def translate(self, ctx, *, text: str = None):
         """Translate text into many different languages"""
         if text:
@@ -173,6 +185,7 @@ class Fun(lightbulb.Plugin):
             dest = googletrans.LANGUAGES.get(ret.dest, "Unknown").title()
             embed.add_field(name=f"From {src}", value=ret.origin, inline=False)
             embed.add_field(name=f"To {dest}", value=ret.text, inline=False)
+            embed.timestamp = datetime.datetime.now().astimezone()
             await ctx.reply(embed=embed)
         else:
             await ctx.reply("Give me text to translate.")
