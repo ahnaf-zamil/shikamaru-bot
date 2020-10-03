@@ -22,7 +22,22 @@ Now go to the folder and run
 pip install -r requirements.txt
 ```
 
-You would have to create a `config.ini` file and then fill it according to the `config.example.ini` file. Also make a new environment variable called `TOKEN` and put your bot's token there. You also need to make an account at [Imgflip](https://imgflip.com) becuase this bot is using their API for the meme generation commands. Store your Imgflip username and password in two environment variables called ``IMGFLIPUSER`` and ``IMGFLIPPASS`` because making an API request to their API will require you to use your Imgflip username and password.
+You would have to create a `config.ini` file and then fill it according to the `config.example.ini` file. Also make a new environment variable called `TOKEN` and put your bot's token there. You also need to make an account at [Imgflip](https://imgflip.com) becuase this bot is using their API for the meme generator commands. Store your Imgflip username and password in two environment variables called ``IMGFLIPUSER`` and ``IMGFLIPPASS`` because making an API request to their API will require you to use your Imgflip username and password.
+
+
+If you are using Windows then open your command prompt and write
+```cmd
+SET TOKEN=your bot token
+SET IMGFLIPUSER=your imgflip username
+SET IMGFLIPPASS=your imgflip password
+```
+
+If you are using Linux then write
+```bash
+export TOKEN=your bot token
+export IMGFLIPUSER=your imgflip username
+export IMGFLIPPASS=your imgflip password
+```
 
 Then run the bot using
 
