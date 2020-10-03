@@ -4,11 +4,12 @@ import lightbulb
 import asyncio
 import traceback
 import aiofiles
-from ..utils import db
 from datetime import datetime
 
 class Events(lightbulb.Plugin):
+    """The plugin for handling all Hikari events"""
 
+    
     def __init__(self, bot):
         super().__init__()
         self.bot = bot
@@ -26,11 +27,6 @@ class Events(lightbulb.Plugin):
         if "<@!759338827432722472>" in event.message.content:
             await event.channel.send("What a drag.....") # Sending message when pinged or mentioned.
             return
-
-    @lightbulb.listener(lightbulb.events.CommandCompletionEvent)
-    async def on_command_complete(self, event):
-        # Incrementing the number of commands ran
-        db.increment()
 
     @lightbulb.listener(lightbulb.events.CommandErrorEvent)
     async def on_command_error(self, event):
