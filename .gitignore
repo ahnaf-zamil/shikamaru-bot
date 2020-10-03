@@ -41,5 +41,6 @@ docs/_build/
 
 database.db
 bot.log
+.vscode/
 
 spammer.py
