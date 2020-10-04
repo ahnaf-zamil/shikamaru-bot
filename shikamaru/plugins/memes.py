@@ -28,6 +28,7 @@ class Memes(lightbulb.Plugin):
         await msg.delete()
         await ctx.reply(r["data"]["url"])
 
+    @lightbulb.cooldown(10, 1, lightbulb.cooldowns.UserBucket)
     @lightbulb.command()
     async def changemymind(self, ctx, *, text=None):
         """Generates a change my mind meme with given text"""

@@ -7,7 +7,9 @@ import asyncio
 import datetime
 import aiofiles
 import googletrans
+from io import BytesIO
 from ..utils.http import fetch
+from ..utils.converters import mention_converter
 
 dog_titles = [
     "Is this Akamaru?",
@@ -86,6 +88,57 @@ class Fun(lightbulb.Plugin):
         await ctx.reply(embed=em)
 
     @lightbulb.command()
+    async def urban(self, ctx, *, word=None):
+        """Search something on the urban dictionary (only works on NSFW channel)"""
+        channel = self.bot.cache.get_guild_channel(ctx.message.channel_id)
+        await self.bot.rest.trigger_typing(channel)
+        try:
+            async with aiohttp.ClientSession() as session:
+                data = await fetch(
+                    session, f"https://api.urbandictionary.com/v0/define?term={word}"
+                )
+                data = json.loads(data)
+        except Exception:
+            return await ctx.reply(
+                "Urban API is not working at the moment.... it may be down \:("
+            )
+
+        if not data:
+            return await ctx.reply("I think the API broke...")
+
+        if not len(data["list"]):
+            return await ctx.reply("Couldn't find your search in the dictionary...")
+
+        result = data["list"][0]
+        definition = result["definition"]
+        if len(definition) >= 1000:
+            definition = definition[:1000]
+            definition = definition.rsplit(" ", 1)[0]
+            definition += "..."
+
+        em = hikari.Embed(
+            title=f"Urban definition for {result['word']}", color="#008563"
+        )
+        em.url = result["permalink"]
+        em.add_field(name="Definition", value=result["definition"])
+        em.add_field(name="Example", value=result["example"])
+        em.add_field(
+            name="Info",
+            value=f"**Author:** {result['author']}\n**Written on:** {result['written_on']}",
+        )
+        em.add_field(name="Upvotes :thumbsup:", value=result["thumbs_up"], inline=True)
+        em.add_field(
+            name="Downvotes :thumbsdown:", value=result["thumbs_down"], inline=True
+        )
+        em.set_author(name=str(ctx.message.author), icon=ctx.message.author.avatar_url)
+        em.set_footer(text=str(self.bot.me), icon=self.bot.me.avatar_url)
+        em.timestamp = datetime.datetime.now().astimezone()
+        try:
+            await ctx.reply(em)
+        except:
+            await ctx.reply(f"Definition not found for term: {word}")
+
+    @lightbulb.command()
     async def joke(self, ctx):
         """Gives you a random joke off the internet."""
         json_data = await self.get_joke()
@@ -101,6 +154,7 @@ class Fun(lightbulb.Plugin):
         em.timestamp = datetime.datetime.now().astimezone()
         await ctx.reply(embed=em)
 
+    @lightbulb.cooldown(10, 1, lightbulb.cooldowns.UserBucket)
     @lightbulb.command()
     async def qrcode(self, ctx, *, url: str = None):
         """Creates QRCode out of url"""
@@ -165,6 +219,7 @@ class Fun(lightbulb.Plugin):
                 f"Mention the person you want to roast, {ctx.message.author.mention}"
             )
 
+    @lightbulb.cooldown(5, 1, lightbulb.cooldowns.UserBucket)
     @lightbulb.command()
     async def translate(self, ctx, *, text: str = None):
         """Translate text into many different languages"""
@@ -189,6 +244,96 @@ class Fun(lightbulb.Plugin):
             await ctx.reply(embed=embed)
         else:
             await ctx.reply("Give me text to translate.")
+
+    @lightbulb.command()
+    async def f(self, ctx, *, reason=None):
+        """Press F to pay respect"""
+        hearts = ["❤", "💛", "💚", "💙", "💜"]
+        text = f"to **{reason}** " if reason else ""
+        await ctx.reply(
+            f"**{ctx.author}** has paid their respect {text}{random.choice(hearts)}"
+        )
+
+    @lightbulb.cooldown(10, 1, lightbulb.cooldowns.UserBucket)
+    @lightbulb.command()
+    async def supreme(self, ctx, *, text=None):
+        """Generate Supreme logo from text"""
+        async with aiohttp.ClientSession() as session:
+            data = await fetch(
+                session, f"https://api.alexflipnote.dev/supreme?text={text[:500]}"
+            )
+        bio = BytesIO(data)
+        bio.seek(0)
+        await ctx.reply(attachment=hikari.Bytes(bio, "supreme.png"))
+
+    @lightbulb.cooldown(5, 1, lightbulb.cooldowns.UserBucket)
+    @lightbulb.command()
+    async def hack(self, ctx, *, user):
+        """Hack someone's account! Try it!"""
+        if user != None:
+            username = user.lower()
+            if user.startswith("<@"):
+                user = await self.bot.rest.fetch_user(await mention_converter(user))
+                username = user.username.lower()
+            await ctx.reply(f"Initiated HTML script for hacking: {user}!")
+            await asyncio.sleep(1)
+            msg = await ctx.reply("Connecting to Discord HQ servers....")
+            await asyncio.sleep(1)
+            await msg.edit(content="Successfully connected to Discord servers!")
+            await asyncio.sleep(2)
+            msg = await ctx.reply("Injecting CSS code into database...")
+            await asyncio.sleep(1)
+            await msg.edit(content="Injecting CSS code into database... Success!")
+            await asyncio.sleep(2)
+            msg = await ctx.reply(
+                content="Accessing Discord Database... [:blue_square::blue_square:    ] 15%"
+            )
+            await asyncio.sleep(2)
+            await msg.edit(
+                content="Accessing Discord Database... [:blue_square::blue_square::blue_square:   ] 42%"
+            )
+            await asyncio.sleep(2)
+            await msg.edit(
+                content="Accessing Discord Database... [:blue_square::blue_square::blue_square::blue_square::blue_square: ] 69%"
+            )
+            await asyncio.sleep(2)
+            await msg.edit(
+                content="Accessing Discord Database.... **COMPLETE!** [:blue_square::blue_square::blue_square::blue_square::blue_square::blue_square:] 99.99%"
+            )
+            await asyncio.sleep(2)
+
+            msg = await ctx.reply("Retrieving Login Info... [:blue_square:      ] 1%")
+            await asyncio.sleep(3)
+            await msg.edit(
+                content="Retrieving Login Info... [:blue_square::blue_square::blue_square:   ] 42%"
+            )
+            await asyncio.sleep(3)
+            await msg.edit(
+                content="Retrieving Login Info... [:blue_square::blue_square::blue_square::blue_square::blue_square::blue_square: ] 69%"
+            )
+            await asyncio.sleep(4)
+            if random.choice(["success", "failure", "success"]) == "failure":
+                await ctx.reply(
+                    f"An error has occurred hacking {user}'s account. Please try again later. ❌"
+                )
+            else:
+                await msg.edit(
+                    content="Retrieving Login Info.... **COMPLETE!** [:blue_square::blue_square::blue_square::blue_square::blue_square::blue_square::blue_square:] 100%"
+                )
+                async with aiofiles.open(
+                    "shikamaru/txt/funnydomains.txt", mode="r"
+                ) as f:
+                    domains = await f.readlines()
+                async with aiofiles.open(
+                    "shikamaru/txt/funnypasswords.txt", mode="r"
+                ) as f:
+                    passwords = await f.readlines()
+
+                await ctx.reply(
+                    f"**Successfully hacked {user}!**\nEmail: `{username.replace('', '') + str(random.randint(20, 99)) + '@' + random.choice(domains)}`Password: `{random.choice(passwords)}`"
+                )
+        else:
+            await ctx.reply("Mention the user you want to hack.")
 
 
 def load(bot):

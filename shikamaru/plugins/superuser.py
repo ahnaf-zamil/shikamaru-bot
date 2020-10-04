@@ -15,6 +15,7 @@ import textwrap
 import traceback
 import time
 from contextlib import redirect_stdout
+from ..utils.http import fetch
 
 
 class SuperUser(lightbulb.Plugin):
@@ -48,6 +49,7 @@ class SuperUser(lightbulb.Plugin):
             "author": ctx.message.author,
             "eprint": self.eprint,
             "ctx": ctx,
+            "fetch": fetch,
         }
         env.update(globals())
         stdout = io.StringIO()
