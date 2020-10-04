@@ -1,4 +1,4 @@
-hikari==2.0.0.dev85
+hikari==2.0.0.dev87
 hikari-lightbulb
 asyncio
 aiohttp
