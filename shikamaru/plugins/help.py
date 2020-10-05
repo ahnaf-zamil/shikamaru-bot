@@ -16,12 +16,14 @@ class CustomHelp(help.HelpCommand):
 
     async def send_help_overview(self, ctx):
         em = hikari.Embed(
-            title="Help",
+            title="Shikamaru's Help Command",
             color="#32a89d",
-            description=f"{self.bot.me.username} is an open-source Discord bot filled with numerous features.\n Type `{self.bot.prefix}help <command name>` to get info about a specific command.",
+            description=f"{self.bot.me.username} is an open-source Discord bot filled with numerous features.\nThe bot prefix is `sh!`.\nType `{self.bot.prefix}help <command name>` to get info about a specific command.",
         )
+        em.set_author(name=str(ctx.message.author), icon=ctx.message.author.avatar_url)
         em.set_thumbnail(self.bot.me.avatar_url)
-        for plugin in self.bot.plugins:
+        plglist = self.bot.plugins
+        for plugin in plglist:
             if plugin in self.bot.hidden_plugins:
                 continue
             commands = ""
@@ -62,8 +64,8 @@ class CustomHelp(help.HelpCommand):
         arg_list = [
             f"<{i}>" for i in command.arg_details.args if i not in ["self", "ctx"]
         ]
-        usage = f"`{command_name} {' '.join(arg_list)}`"
-        em.description = f"**Name:** {command.name}\n**Description: **{help.get_help_text(command)}\n**Category:** {command.plugin.name}\n**Usage:** {usage}"
+        usage = f"{command_name} {' '.join(arg_list)}"
+        em.description = f"**Name:** {command.name}\n**Description: **{help.get_help_text(command)}\n**Category:** {command.plugin.name}\n**Usage:** `{usage[:len(list(usage))-1] if not usage.endswith('>') else usage}`" # Removing the last space from the command after joining args with spaces
         em.set_footer(
             text=f"Requested by: {ctx.message.author}",
             icon=ctx.message.author.avatar_url,

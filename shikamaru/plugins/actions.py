@@ -3,7 +3,10 @@ import hikari
 import aiofiles
 import random
 import datetime
+import aiohttp
+from io import BytesIO
 from ..utils.converters import mention_converter
+from ..utils.http import fetch
 
 
 class Actions(lightbulb.Plugin):
@@ -53,6 +56,26 @@ class Actions(lightbulb.Plugin):
         embed.timestamp = datetime.datetime.now().astimezone()
         await ctx.reply(embed)
 
+    @lightbulb.cooldown(5, 1, lightbulb.cooldowns.UserBucket)
+    @lightbulb.command()
+    async def ship(self, ctx, user1=None, user2=None):
+        """Ship two users"""
+        if user1 and user2:
+            if user1.startswith("<@") and user2.startswith("<@"):
+                user1 = await self.bot.rest.fetch_user(await mention_converter(user1))
+                user2 = await self.bot.rest.fetch_user(await mention_converter(user2))
+            else:
+                await ctx.send("Please **mention** the two users you want to ship.")
+                return
+            async with aiohttp.ClientSession() as session:
+                data = await fetch(
+                    session, f"https://api.alexflipnote.dev/ship?user={user1.avatar_url}&user2={user2.avatar_url}"
+                )
+            bio = BytesIO(data)
+            bio.seek(0)
+            await ctx.reply(attachment=hikari.Bytes(bio, "ship.png"))
+        else:
+            await ctx.reply("Please mention two users to ship")
 
 def load(bot):
     bot.add_plugin(Actions(bot))
