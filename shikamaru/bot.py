@@ -21,6 +21,7 @@ bot = lightbulb.Bot(
     prefix=botconfig["prefix"],
     insensitive_commands=bool(botconfig["insensitive"]),
     owner_ids=[int(i) for i in botconfig["owners"].split(", ")],
+    intents=hikari.Intents.ALL
 )
 bot.prefix = botconfig["prefix"]
 bot.config = botconfig
