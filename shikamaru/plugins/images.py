@@ -58,7 +58,8 @@ class Images(lightbulb.Plugin):
             bio = BytesIO(data)
             bio.seek(0)
             await ctx.reply(attachment=hikari.Bytes(bio, "achievement.png"))
-        await ctx.reply("Please enter text that I can use to create the image.")
+        else:
+            await ctx.reply("Please enter text that I can use to create the image.")
     
     @lightbulb.cooldown(5, 1, lightbulb.cooldowns.UserBucket)
     @lightbulb.command()
@@ -72,7 +73,8 @@ class Images(lightbulb.Plugin):
             bio = BytesIO(data)
             bio.seek(0)
             await ctx.reply(attachment=hikari.Bytes(bio, "challenge.png"))
-        await ctx.reply("Please enter text that I can use to create the image.")
+        else:
+            await ctx.reply("Please enter text that I can use to create the image.")
     
     @lightbulb.cooldown(5, 1, lightbulb.cooldowns.UserBucket)
     @lightbulb.command()
