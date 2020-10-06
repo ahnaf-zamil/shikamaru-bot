@@ -8,26 +8,9 @@ import datetime
 import aiofiles
 import googletrans
 from io import BytesIO
+import urllib.parse
 from ..utils.http import fetch
 from ..utils.converters import mention_converter
-
-dog_titles = [
-    "Is this Akamaru?",
-    "I think Kiba will like this dog",
-    "This dog is from the Inuzuka clan",
-    "I don't know who this dog is",
-    "What a drag dogs are....",
-    "Some random dog I found at Naruto's house",
-]
-
-cat_titles = [
-    "Cute cat, right?",
-    "Cats > Dogs?",
-    "Is this even a cat?",
-    "uWu",
-    "What a drag cats are....",
-    "Some random cat I found at Kiba's house..... why does he have a cat?",
-]
 
 
 class Fun(lightbulb.Plugin):
@@ -87,9 +70,54 @@ class Fun(lightbulb.Plugin):
         em.timestamp = datetime.datetime.now().astimezone()
         await ctx.reply(embed=em)
 
+    @lightbulb.cooldown(5, 1, lightbulb.cooldowns.UserBucket)
+    @lightbulb.command()
+    async def fml(self, ctx):
+        """Gives you a f**k my life joke (This command is NSFW)"""
+        channel = await self.bot.rest.fetch_channel(ctx.message.channel_id)
+        if not channel.is_nsfw:
+            await ctx.reply("This command can only be used in NSFW channels.")
+            return
+        async with aiohttp.ClientSession() as session:
+            data = await fetch(session, "https://api.alexflipnote.dev/fml")
+            data = json.loads(data)
+        em = hikari.Embed(
+            title="F**k my file",
+            color="#3bff3b",
+            description=f"{data['text']}"
+        )
+        
+        em.set_footer(
+            text=f"Requested by: {ctx.message.author}",
+            icon=ctx.message.author.avatar_url,
+        )
+        em.timestamp = datetime.datetime.now().astimezone()
+        await ctx.reply(em)
+
+    @lightbulb.command()
+    async def math(self, ctx, *, expr=None):
+        """Does math for you, only the simple ones not algebra or geometry"""
+        if expr:
+            loop = asyncio.get_running_loop()
+            ret = await loop.run_in_executor(None, urllib.parse.quote, expr)
+            async with aiohttp.ClientSession() as session:
+                result = await fetch(session, f"http://api.mathjs.org/v4/?expr={ret}")
+                result = result.decode("utf-8")
+            em = hikari.Embed(title="Math", color="#8bfce0")
+            em.add_field(name="Expression", value=expr)
+            em.add_field(name="Result", value=result)
+            em.set_thumbnail("https://i.ibb.co/tb82t15/calculator-icon-math-icon-11563227565ddgk3sskht-1.png")
+            em.set_footer(text=str(self.bot.me), icon=self.bot.me.avatar_url)
+            em.timestamp = datetime.datetime.now().astimezone()
+            await ctx.reply(em)
+        else:
+            await ctx.reply("Please enter a math expression at the end of the function")
+    
+    
+    @lightbulb.cooldown(5, 1, lightbulb.cooldowns.UserBucket)
     @lightbulb.command()
     async def urban(self, ctx, *, word=None):
-        """Search something on the urban dictionary (only works on NSFW channel)"""
+        """Search something on the urban dictionary"""
         channel = self.bot.cache.get_guild_channel(ctx.message.channel_id)
         await self.bot.rest.trigger_typing(channel)
         try:
@@ -163,39 +191,6 @@ class Fun(lightbulb.Plugin):
             return
         await ctx.reply("Please enter a url to make QRCode")
 
-    @lightbulb.command()
-    async def dog(self, ctx):
-        """Gives you a random dog."""
-        async with aiohttp.ClientSession() as session:
-            async with session.get("https://random.dog/woof") as resp:
-                if resp.status != 200:
-                    return await ctx.reply("No dog found :(")
-                filename = await resp.text()
-                url = f"https://random.dog/{filename}"
-                if filename.endswith((".mp4", ".webm")):
-                    await ctx.reply("No dogs found \\:(")
-                else:
-                    await ctx.reply(
-                        embed=hikari.Embed(
-                            title=random.choice(dog_titles), color="#dffc03"
-                        ).set_image(url)
-                    )
-
-    @lightbulb.command()
-    async def cat(self, ctx):
-        """Gives you a random cat."""
-        async with aiohttp.ClientSession() as session:
-            async with session.get(
-                "https://api.thecatapi.com/v1/images/search"
-            ) as resp:
-                if resp.status != 200:
-                    return await ctx.reply("No cat found :(")
-                js = await resp.json()
-                await ctx.reply(
-                    embed=hikari.Embed(
-                        title=random.choice(cat_titles), color="#dffc03"
-                    ).set_image(js[0]["url"])
-                )
 
     @lightbulb.command(name="8ball", aliases=["8ball"])
     async def fortune(self, ctx, *, question: str = None):
@@ -253,18 +248,7 @@ class Fun(lightbulb.Plugin):
         await ctx.reply(
             f"**{ctx.author}** has paid their respect {text}{random.choice(hearts)}"
         )
-
-    @lightbulb.cooldown(10, 1, lightbulb.cooldowns.UserBucket)
-    @lightbulb.command()
-    async def supreme(self, ctx, *, text=None):
-        """Generate Supreme logo from text"""
-        async with aiohttp.ClientSession() as session:
-            data = await fetch(
-                session, f"https://api.alexflipnote.dev/supreme?text={text[:500]}"
-            )
-        bio = BytesIO(data)
-        bio.seek(0)
-        await ctx.reply(attachment=hikari.Bytes(bio, "supreme.png"))
+        
 
     @lightbulb.cooldown(5, 1, lightbulb.cooldowns.UserBucket)
     @lightbulb.command()

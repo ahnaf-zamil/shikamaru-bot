@@ -9,6 +9,7 @@ import sqlite3
 import itertools
 import datetime
 import platform
+import asyncio
 import googletrans
 
 
@@ -19,7 +20,7 @@ class Info(lightbulb.Plugin):
     def __init__(self, bot):
         super().__init__()
         self.bot = bot
-        self.process = psutil.Process()
+        self.process = psutil.Process(os.getpid())
 
     @lightbulb.command()
     async def ping(self, ctx):
@@ -71,20 +72,21 @@ Hikari Version: {hikari.__version__}
         osinfo = platform.uname()
         pid = os.getpid()
         py = psutil.Process(pid)
-        memoryUse = (py.memory_info()[0] / 2.0 ** 30) * 1024
-        svmem = psutil.virtual_memory()
-        totalmemory = svmem.total // 1000000
-        cpu_usage = self.process.cpu_percent() / psutil.cpu_count()
+        loop = asyncio.get_running_loop()
+        ram_usage = await loop.run_in_executor(None, self.process.memory_full_info)
+        ram_usage = ram_usage.rss / 1024**2
+        cpu_usage = await loop.run_in_executor(None, self.process.cpu_percent) / await loop.run_in_executor(None, psutil.cpu_count)
         embed.add_field(
             name="OS", value=f"{osinfo.system} {osinfo.version} {osinfo.machine}"
         )
+        
+        embed.add_field(name="Uptime", value=uptime_stamp)
+        embed.add_field(name="Commands loaded", value=len(list(self.bot.commands)))
         embed.add_field(
             name="Process",
-            value=f"```Memory: {round(memoryUse/totalmemory * 100, 2):.2f} MiB\nCPU: {psutil.cpu_percent(interval=None, percpu=False)}%```",
+            value=f"```Memory: {ram_usage:.2f} MB\nCPU: {psutil.cpu_percent(interval=None, percpu=False)}%```",
             inline=True,
         )
-        version = hikari.__version__
-        embed.add_field(name="Uptime", value=uptime_stamp)
         embed.add_field(name="Libraries", value=t)
         embed.set_footer(text=str(self.bot.me), icon=self.bot.me.avatar_url)
         embed.timestamp = datetime.datetime.now().astimezone()
@@ -102,6 +104,10 @@ Hikari Version: {hikari.__version__}
         em.set_footer(text=str(self.bot.me), icon=self.bot.me.avatar_url)
         await ctx.reply(embed=em)
 
+    @lightbulb.command()
+    async def invite(self, ctx):
+        """Invite me to your server"""
+        await ctx.reply(f"**{ctx.message.author.username}**, use this link to invite me\n<https://discord.com/api/oauth2/authorize?client_id={self.bot.me.id}&permissions={self.bot.config['permissions']}&scope=bot>")
 
 def load(bot):
     bot.add_plugin(Info(bot))
