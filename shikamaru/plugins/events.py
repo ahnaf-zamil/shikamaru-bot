@@ -35,7 +35,7 @@ class Events(lightbulb.Plugin):
 
     @lightbulb.listener(hikari.MessageCreateEvent)
     async def on_message(self, event):
-        if "<@!759338827432722472>" in event.message.content:
+        if f"<@!{self.bot.me.id}>" in event.message.content:
             await event.channel.send(
                 "What a drag....."
             )  # Sending message when pinged or mentioned.
