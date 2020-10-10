@@ -56,7 +56,7 @@ class Info(lightbulb.Plugin):
             time_format = "**{h}** hours, **{m}** minutes, and **{s}** seconds."
         uptime_stamp = time_format.format(d=days, h=hours, m=minutes, s=seconds)
         embed = hikari.Embed(
-            title="About Shikamaru",
+            title=f"About {self.bot.me.username}",
             color="#326fa8",
             url="https://github.com/ahnaf-zamil/shikamaru-bot",
         )
