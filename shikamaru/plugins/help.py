@@ -16,7 +16,7 @@ class CustomHelp(help.HelpCommand):
 
     async def send_help_overview(self, ctx):
         em = hikari.Embed(
-            title="Shikamaru's Help Command",
+            title=f"{self.bot.me.username}'s Help Command",
             color="#32a89d",
             description=f"{self.bot.me.username} is an open-source Discord bot filled with numerous features.\nThe bot prefix is `sh!`.\nType `{self.bot.prefix}help <command name>` to get info about a specific command.",
         )
