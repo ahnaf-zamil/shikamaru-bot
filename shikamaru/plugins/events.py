@@ -22,11 +22,20 @@ class Events(lightbulb.Plugin):
                 type=hikari.ActivityType.WATCHING,
             )
         )
-        print("\n\n I'm ready for work! What a drag.....\n\n")
+        print("""\n\n
+   _____ _                                                                                               
+  / ____| |   (_) |                                    (_)                        | |      
+ | (___ | |__  _| | ____ _ _ __ ___   __ _ _ __ _   _   _ ___   _ __ ___  __ _  __| |_   _ 
+  \___ \| '_ \| | |/ / _` | '_ ` _ \ / _` | '__| | | | | / __| | '__/ _ \/ _` |/ _` | | | |
+  ____) | | | | |   < (_| | | | | | | (_| | |  | |_| | | \__ \ | | |  __/ (_| | (_| | |_| |
+ |_____/|_| |_|_|_|\_\__,_|_| |_| |_|\__,_|_|   \__,_| |_|___/ |_|  \___|\__,_|\__,_|\__, |
+                                                                                      __/ |
+                                                                                     |___/ 
+              \n\n""")
 
     @lightbulb.listener(hikari.MessageCreateEvent)
     async def on_message(self, event):
-        if "<@!759338827432722472>" in event.message.content:
+        if f"<@!{self.bot.me.id}>" in event.message.content:
             await event.channel.send(
                 "What a drag....."
             )  # Sending message when pinged or mentioned.
