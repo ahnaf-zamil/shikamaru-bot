@@ -18,7 +18,7 @@ class CustomHelp(help.HelpCommand):
         em = hikari.Embed(
             title=f"{self.bot.me.username}'s Help Command",
             color="#32a89d",
-            description=f"{self.bot.me.username} is an open-source Discord bot filled with numerous features.\nThe bot prefix is `sh!`.\nType `{self.bot.prefix}help <command name>` to get info about a specific command.",
+            description=f"{self.bot.me.username} is an open-source Discord bot filled with numerous features.\nThe bot prefix is `{self.bot.prefix}`.\nType `{self.bot.prefix}help <command name>` to get info about a specific command.",
         )
         em.set_author(name=str(ctx.message.author), icon=ctx.message.author.avatar_url)
         em.set_thumbnail(self.bot.me.avatar_url)
